@@ -140,7 +140,8 @@ git branch -M main
 
 # Create a new GitHub repo (via web UI or GH CLI)
 # Then add your remote, e.g.:
-git remote add origin https://github.com/<your-username>/langgraph-agent-starter.git
+git remote add origin https://github.com/keshabshrestha007/1_Langgraph_Agent.git
 git push -u origin main
 ```
+
 
