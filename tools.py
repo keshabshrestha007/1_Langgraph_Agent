@@ -53,22 +53,37 @@ def read_pdf(filename: str) -> str:
 
 @tool
 def write_pdf(filename: str, text: str) -> str:
-    """Creates a simple PDF with given text."""
-    writer = PdfWriter()
+    """Creates a PDF with proper indentation, spaces, and new lines."""
+    try:
+        packet = BytesIO()
+        c = canvas.Canvas(packet, pagesize=letter)
 
-    packet = BytesIO()
-    c = canvas.Canvas(packet, pagesize=letter)
-  
-    c.drawString(72, 750, text[:2000])  
-    c.save()
+        # Start a text object
+        textobject = c.beginText(50, 750)  
+        textobject.setFont("Helvetica", 12)
 
-    packet.seek(0)
-    new_pdf = PdfReader(packet)
-    writer.add_page(new_pdf.pages[0])
+        # Split text into lines and add them one by one
+        for line in text.splitlines():
+            textobject.textLine(line)
 
-    with open(filename, "wb") as f:
-        writer.write(f)
-    return f"✅ PDF created: {filename}"
+        c.drawText(textobject)
+        c.save()
+
+        # Move buffer back to start
+        packet.seek(0)
+        new_pdf = PdfReader(packet)
+
+        # Write final PDF
+        writer = PdfWriter()
+        writer.add_page(new_pdf.pages[0])
+        with open(filename, "wb") as f:
+            writer.write(f)
+
+        return f"✅ PDF created with proper formatting: {filename}"
+
+    except Exception as e:
+        return f"❌ Failed to create PDF: {str(e)}"
+
 
 @tool
 def search_arxiv(query: str, max_results: int = 3) -> str:
@@ -92,3 +107,4 @@ def search_arxiv(query: str, max_results: int = 3) -> str:
 
     except Exception as e:
         return f"❌ Arxiv search failed: {str(e)}"
+
