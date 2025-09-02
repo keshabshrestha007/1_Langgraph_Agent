@@ -23,15 +23,24 @@ def write_to_file(filename: str, content: str) -> str:
 
 @tool
 def read_file(filename: str) -> str:
-    """Reads content from a file.""""
+    """Reads content from a file."""
     if not os.path.exists(filename):
         return "❌ File does not exist."
     with open(filename, "r", encoding="utf-8") as f:
         return f.read()
+@tool
+def append_to_file(filename: str, content: str) -> str:
+    """Appends given content to a file. Creates the file if it does not exist."""
+    try:
+        with open(filename, "a", encoding="utf-8") as f:
+            f.write(content + "\n")
+        return f"✅ Content appended to {filename}"
+    except Exception as e:
+        return f"❌ Failed to append: {str(e)}"
 
 @tool
 def read_pdf(filename: str) -> str:
-    """Extracts text from a PDF file.""""
+    """Extracts text from a PDF file."""
     if not os.path.exists(filename):
         return "❌ PDF not found"
     reader = PdfReader(filename)
@@ -60,3 +69,26 @@ def write_pdf(filename: str, text: str) -> str:
     with open(filename, "wb") as f:
         writer.write(f)
     return f"✅ PDF created: {filename}"
+
+@tool
+def search_arxiv(query: str, max_results: int = 3) -> str:
+    """Searches Arxiv for research papers and returns top results with title, authors, and link."""
+    try:
+        search = arxiv.Search(
+            query=query,
+            max_results=max_results,
+            sort_by=arxiv.SortCriterion.Relevance
+        )
+
+        results = []
+        for result in search.results():
+            paper_info = f"📄 {result.title}\n👨‍🔬 Authors: {', '.join(a.name for a in result.authors)}\n🔗 {result.entry_id}\n"
+            results.append(paper_info)
+
+        if not results:
+            return "❌ No papers found."
+
+        return "\n".join(results)
+
+    except Exception as e:
+        return f"❌ Arxiv search failed: {str(e)}"
