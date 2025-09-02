@@ -21,7 +21,7 @@ if not groq_api_key:
     raise ValueError("GROQ_API_KEY not set. Create a .env file from .env.example and add your key.")
 
 
-tools = [search_tool,write_to_file,read_file,read_pdf,write_pdf]
+tools = [search_tool,write_to_file,read_file,read_pdf,write_pdf,append_to_file,search_arxiv]
 # Initialize LLM
 llm = ChatGroq(
             model="llama-3.3-70b-versatile",
@@ -75,4 +75,5 @@ if __name__ == "__main__":
         
         
     )
+
     print(response)
