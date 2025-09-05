@@ -4,12 +4,14 @@ from PyPDF2 import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from io import BytesIO
+import arxiv
+import streamlit as st
 
 from langchain_community.tools import DuckDuckGoSearchRun
 
-DUCK_REGION = os.getenv("DUCK_REGION", "us")
-DUCK_SAFESEARCH = os.getenv("DUCK_SAFESEARCH", "Moderate")
-DUCK_TIME_RANGE = os.getenv("DUCK_TIME_RANGE", "y")
+DUCK_REGION = st.secrets["DUCK_REGION"]
+DUCK_SAFESEARCH = st.secrets["DUCK_SAFESEARCH"]
+DUCK_TIME_RANGE = st.secrets["DUCK_TIME_RANGE"]
 
 search_tool = DuckDuckGoSearchRun(region=DUCK_REGION, safesearch=DUCK_SAFESEARCH, time_range=DUCK_TIME_RANGE)
 search_tool.name = "duckduckgo_search"
@@ -107,4 +109,5 @@ def search_arxiv(query: str, max_results: int = 3) -> str:
 
     except Exception as e:
         return f"❌ Arxiv search failed: {str(e)}"
+
 
