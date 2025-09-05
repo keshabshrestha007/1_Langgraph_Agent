@@ -16,9 +16,9 @@ from langgraph.checkpoint.sqlite import SqliteSaver
 
 
 load_dotenv()
-groq_api_key = os.getenv("GROQ_API_KEY")
+groq_api_key = st.secrets["GROQ_API_KEY"]
 if not groq_api_key:
-    raise ValueError("GROQ_API_KEY not set. Create a .env file from .env.example and add your key.")
+    raise ValueError("GROQ_API_KEY not set.")
 
 
 tools = [search_tool,write_to_file,read_file,read_pdf,write_pdf,append_to_file,search_arxiv]
@@ -31,6 +31,10 @@ llm = ChatGroq(
 llm_with_tools = llm.bind_tools(tools = tools)
 
 class ChatConfig(TypedDict):
+    """ Represents state of the graph.
+        Attributes:
+            messages(list) -> list of Basemessages
+    """
     messages : Annotated[List[BaseMessage], add_messages]
 
 # Initialize StateGraph
@@ -39,11 +43,11 @@ graph = StateGraph(ChatConfig)
 conn = sqlite3.connect("chat_history.db",check_same_thread=False)
 saver = SqliteSaver(conn)
 
-def chat_node(state:ChatConfig) -> dict:
+def chat_node(state:ChatConfig) -> ChatConfig:
     response = llm_with_tools.invoke(state["messages"])
     return {"messages":[response]}
 
-def tools_router(state:ChatConfig):
+def tools_router(state:ChatConfig) -> Literal["tool_node","__end__"]:
     last_message = state["messages"][-1]
     if hasattr(last_message,"tool_calls") and last_message.tool_calls:
         return "tool_node"
@@ -77,3 +81,4 @@ if __name__ == "__main__":
     )
 
     print(response)
+
