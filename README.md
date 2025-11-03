@@ -16,7 +16,7 @@ A production-ready starter for your LangGraph tool-using agent with Streamlit UI
 
 ## 🗂 Project Structure
 
-```
+```bash
 .
 ├── .env              
 ├── .gitignore
@@ -32,8 +32,8 @@ A production-ready starter for your LangGraph tool-using agent with Streamlit UI
 
 ## 🔑 Environment Variables
 
-```
-Create a .env file in the project root and fill in your configuration:
+```bash
+#Create a .env file in the project root and fill in your configuration:
 
 GROQ_API_KEY=your_groq_api_key_here
 DUCK_REGION=us-en
@@ -50,59 +50,52 @@ DUCK_TIME_RANGE=d
 - `DUCK_REGION` (default: `us`)
 - `DUCK_SAFESEARCH` (default: `Moderate`)
 - `DUCK_TIME_RANGE` (default: `y`)
-
-> ⚠️ Never commit `.env` to Git. `.gitignore` already protects it.
-
 ---
+## 🛠️ Setup
 
-## 🚀 Quickstart (Local)
-
+### 1. Clone the repository
 ```bash
-# 1) Create & activate a virtualenv (recommended)
+git remote add origin https://github.com/keshabshrestha007/1_Langgraph_Agent.git
+```
+```bash
+cd 1_Langgraph_Agent
+```
+### 2. Create & activate a virtualenv (recommended)
+```bash
 python -m venv .venv
+```
+on windows
+```bash
 .venv\Scripts\activate
+```
+on linux/mac
+```bash
+source venv/bin/activate
+```
 
-# 2) Install dependencies
-pip install --upgrade pip
+### 3. Install dependencies
+```bash
 pip install -r requirements.txt
-
-# 3) Configure secrets
+```
+### 4. Configure secrets
+```bash
 GROQ_API_KEY=your_groq_api_key_here
 DUCK_REGION=us-en
 DUCK_SAFESEARCH=moderate
 DUCK_TIME_RANGE=d
 # edit .env and paste your GROQ_API_KEY
+```
 
-# 4) Run Streamlit
+### 5. Run Streamlit
+```bash
 streamlit run app.py
 ```
-
-Open the app at http://localhost:8501
-
 ---
-
-## 🧪 Run quality checks
-
-```bash
-# Lint & type-check
-ruff check .
-mypy .
-
-# Tests
-pytest -q
-```
-
-You can also run everything via:
-```bash
-make qa
-```
-
-
 
 ## 🧩 How to add a new tool
 
 1. Create the tool in `tools.py` with the `@tool` decorator:
-   ```python
+   ```bash
    @tool
    def my_cool_tool(param: str) -> str:
        """Explain what the tool does here."""
@@ -129,19 +122,6 @@ make qa
 
 ---
 
-## 📤 Push to GitHub (step-by-step)
 
-```bash
-# From project root
-git init
-git add .
-git commit -m "Initial commit: LangGraph Agent Starter"
-git branch -M main
-
-# Create a new GitHub repo (via web UI or GH CLI)
-# Then add your remote, e.g.:
-git remote add origin https://github.com/keshabshrestha007/1_Langgraph_Agent.git
-git push -u origin main
-```
 
 
